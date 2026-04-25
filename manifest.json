@@ -1,0 +1,16 @@
+{
+  "name": "مزرعتي ERP",
+  "short_name": "مزرعتي",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f8f9fa",
+  "theme_color": "#198754",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3050/3050267.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
