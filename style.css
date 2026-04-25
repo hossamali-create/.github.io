@@ -1,112 +1,32 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    user-select: none;
-    background-color: #f8f9fa;
-}
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; background-color: #f4f6f8; }
+.app-view { display: none; animation: fadeIn 0.3s ease; }
+.app-view.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-.app-view {
-    display: none;
-    animation: fadeIn 0.3s ease;
-}
+/* شريط التنقل السفلي والزر العائم */
+.bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: #fff; display: flex; justify-content: space-between; align-items: center; height: 70px; box-shadow: 0 -2px 10px rgba(0,0,0,0.08); z-index: 1030; padding: 0 5px; }
+.nav-item { text-decoration: none; color: #6c757d; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.7rem; width: 20%; transition: color 0.2s; }
+.nav-item i { font-size: 1.3rem; margin-bottom: 4px; }
+.nav-item.active { color: #198754; font-weight: bold; }
+.fab-wrapper { position: relative; top: -25px; display: flex; justify-content: center; width: 20%; }
+.fab-btn { background: #ffc107; color: #212529; border: none; border-radius: 50%; width: 60px; height: 60px; font-size: 1.5rem; display: flex; justify-content: center; align-items: center; cursor: pointer; border: 4px solid #f4f6f8; transition: transform 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+.fab-btn:active { transform: scale(0.95); }
 
-.app-view.active {
-    display: block;
-}
+/* خط الزمن للتحصينات */
+.timeline { border-right: 2px solid #e9ecef; padding-right: 15px; margin-right: 10px; }
+.timeline-item { position: relative; margin-bottom: 12px; padding-bottom: 5px; border-bottom: 1px dashed #e9ecef; font-size: 0.9rem;}
+.timeline-item:last-child { border-bottom: none; margin-bottom: 0;}
+.timeline-item::before { content: ''; position: absolute; right: -21px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: #198754; }
+.timeline-item.past::before { background: #6c757d; }
+.timeline-item.today::before { background: #dc3545; box-shadow: 0 0 8px #dc3545; animation: pulse 1.5s infinite; }
+.timeline-item.future::before { background: #0dcaf0; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(220,53,69,0.7); } 70% { box-shadow: 0 0 0 10px rgba(220,53,69,0); } 100% { box-shadow: 0 0 0 0 rgba(220,53,69,0); } }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(5px);
-    }
+/* تعديلات جداول Grid.js للغة العربية */
+.gridjs-wrapper { text-align: right; direction: rtl; font-size: 0.85rem; }
+.gridjs-search { float: right; margin-bottom: 10px; width: 100%; }
+.gridjs-pagination { direction: ltr; }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.bottom-nav {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 70px;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
-    z-index: 1030;
-    padding: 0 5px;
-}
-
-.nav-item {
-    text-decoration: none;
-    color: #6c757d;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    width: 20%;
-    transition: color 0.2s;
-}
-
-.nav-item i {
-    font-size: 1.3rem;
-    margin-bottom: 4px;
-}
-
-.nav-item.active {
-    color: #198754;
-    font-weight: bold;
-}
-
-.fab-wrapper {
-    position: relative;
-    top: -25px;
-    display: flex;
-    justify-content: center;
-    width: 20%;
-}
-
-.fab-btn {
-    background: #ffc107;
-    color: #212529;
-    border: none;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    font-size: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    border: 4px solid #f8f9fa;
-    transition: transform 0.2s;
-}
-
-.fab-btn:active {
-    transform: scale(0.95);
-}
-
-/* Grid.js RTL */
-.gridjs-wrapper {
-    text-align: right;
-    direction: rtl;
-    font-size: 0.85rem;
-}
-
-.gridjs-search {
-    float: right;
-    margin-bottom: 10px;
-    width: 100%;
-}
-
-/* Barcode Scanner View */
-#qr-reader {
-    width: 100%;
-    max-height: 300px;
-    border-radius: 10px;
-    overflow: hidden;
-}
+/* الباركود */
+#qr-reader { width: 100%; max-height: 300px; border-radius: 10px; overflow: hidden; border: 2px solid #0dcaf0; }
+.cursor-pointer { cursor: pointer; }
