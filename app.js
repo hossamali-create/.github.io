@@ -94,6 +94,14 @@ window.openModal = async function (type) {
             let n = document.getElementById('m-n').value, bar = document.getElementById('m-bar').value, q = parseFloat(document.getElementById('m-q').value), c = parseFloat(document.getElementById('m-c').value);
             if (n && q) { await db.medicine.add({ id: Date.now(), name: n, barcode: bar, qty: q, cost: c }); await setVal('safeBalance', await getVal('safeBalance') - c); await db.expenses.add({ id: Date.now(), timestamp: Date.now(), date: new Date().toLocaleDateString(), desc: `دواء: ${n}`, amount: c, type: 'med' }); if (activeCycle) { activeCycle.totalCost += c; await db.cycles.put(activeCycle); } toastSuccess("تم الحفظ"); genericModal.hide(); refreshUI(); }
         });
+    }else if (type === 'workerModal') {
+        buildModal('إضافة عامل', `<input type="text" id="m-n" class="form-control mb-2" placeholder="اسم العامل"><input type="number" id="m-s" class="form-control" placeholder="الراتب الشهري/اليومي">`, async () => {
+            let n=document.getElementById('m-n').value, s=parseFloat(document.getElementById('m-s').value);
+            if(n && s>0) { 
+                await db.workers.add({id:Date.now(), name:n, salary:s}); 
+                toastSuccess("تمت الإضافة بنجاح"); genericModal.hide(); refreshUI(); 
+            }
+        });
     }
 };
 
@@ -201,6 +209,22 @@ async function renderCharts(activeCycle) {
     historyBar = new Chart(ctxB, { type: 'bar', data: { labels: labels, datasets: [{ label: 'صافي الربح (ج.م)', data: profits, backgroundColor: profits.map(p => p >= 0 ? '#198754' : '#dc3545') }] } });
 }
 
+window.useMedicine = async function(id) {
+    let med = await db.medicine.get(id);
+    if(!med || med.qty <= 0) return toastError("الكمية غير كافية في المخزن");
+    
+    buildModal('سحب دواء', `<p class="text-info mb-2">الصنف: <strong>${med.name}</strong> (المتاح: ${med.qty})</p><input type="number" id="m-q" class="form-control" placeholder="الكمية المسحوبة">`, async () => {
+        let q=parseFloat(document.getElementById('m-q').value);
+        if(q>0 && q<=med.qty) {
+            med.qty -= q;
+            await db.medicine.put(med);
+            toastSuccess("تم سحب الدواء"); genericModal.hide(); refreshUI();
+        } else { 
+            toastError("رصيد الدواء لا يكفي!"); 
+        }
+    });
+};
+
 // ================= UI REFRESH =================
 async function refreshUI() {
     document.getElementById('total-cash').innerText = (await getVal('safeBalance')).toLocaleString();
@@ -229,5 +253,8 @@ async function refreshUI() {
     let meds = await db.medicine.toArray();
     document.getElementById('medicine-list').innerHTML = meds.map(m => `<div class="col-6"><div class="card p-2 shadow-sm border-0 border-start border-info border-3"><small class="text-muted">${m.name}</small><div class="d-flex justify-content-between align-items-center mt-1"><b>${m.qty} وحدة</b><button class="btn btn-sm btn-outline-info py-0 px-2" onclick="useMedicine(${m.id})">سحب</button></div></div></div>`).join('');
 
+    let workers = await db.workers.toArray();
+    document.getElementById('workers-list').innerHTML = workers.map(w => `<div class="list-group-item d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-user text-secondary"></i> ${w.name}</span><span class="badge bg-danger rounded-pill">${w.salary} ج</span></div>`).join('');
+    
     await renderCharts(active);
 }
