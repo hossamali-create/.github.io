@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مزرعتي ERP | النسخة الاحترافية الشاملة</title>
-
+    <title>مزرعتي ERP | النسخة النهائية الشاملة</title>
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -14,7 +13,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body class="bg-light">
 
     <nav class="navbar navbar-dark bg-success shadow-sm fixed-top">
@@ -27,78 +25,49 @@
     </nav>
 
     <main class="container mb-5 pb-5 mt-5 pt-3" id="main-content">
-
+        
         <section id="view-dashboard" class="app-view active">
             <div id="smart-alerts-container" class="mb-3"></div>
 
             <div class="row g-2 mb-3">
-                <div class="col-6">
-                    <div class="card shadow-sm h-100 text-center p-2 border-primary border-start border-4">
-                        <h6 class="text-muted small">رصيد العلف</h6>
-                        <h4 class="text-primary mb-0" id="inv-feed-stock">0</h4>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card shadow-sm h-100 text-center p-2 border-warning border-start border-4">
-                        <h6 class="text-muted small">العدد الفعلي</h6>
-                        <h4 class="mb-0" id="kpi-birds">0</h4>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card shadow-sm h-100 text-center p-2">
-                        <h6 class="text-muted small">معامل التحويل (FCR)</h6>
-                        <h4 class="text-success mb-0" id="kpi-fcr">0.00</h4>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card shadow-sm h-100 text-center p-2">
-                        <h6 class="text-muted small">سعر التعادل / كجم</h6>
-                        <h4 class="text-success mb-0" id="kpi-breakeven">0.00</h4>
-                    </div>
-                </div>
+                <div class="col-6"><div class="card shadow-sm h-100 text-center p-2 border-primary border-start border-4"><h6 class="text-muted small">رصيد العلف</h6><h4 class="text-primary mb-0" id="inv-feed-stock">0</h4><button class="btn btn-sm btn-outline-primary mt-2" onclick="openModal('feedModal')">شراء علف</button></div></div>
+                <div class="col-6"><div class="card shadow-sm h-100 text-center p-2 border-warning border-start border-4"><h6 class="text-muted small">العدد الفعلي</h6><h4 class="mb-0" id="kpi-birds">0</h4></div></div>
+                <div class="col-6"><div class="card shadow-sm h-100 text-center p-2"><h6 class="text-muted small">معامل التحويل (FCR)</h6><h4 class="text-success mb-0" id="kpi-fcr">0.00</h4></div></div>
+                <div class="col-6"><div class="card shadow-sm h-100 text-center p-2"><h6 class="text-muted small">سعر التعادل / كجم</h6><h4 class="text-success mb-0" id="kpi-breakeven">0.00</h4></div></div>
             </div>
 
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white"><i class="fa-solid fa-chart-pie text-success"></i> تحليل مصروفات
-                    الدورة الحالية</div>
+                <div class="card-header bg-white fw-bold"><i class="fa-solid fa-chart-pie text-success"></i> توزيع مصروفات الدورة الحالية</div>
                 <div class="card-body"><canvas id="expenseDoughnutChart" height="200"></canvas></div>
             </div>
 
             <div class="d-flex gap-2">
-                <button class="btn btn-secondary w-50 shadow-sm" onclick="exportData()"><i
-                        class="fa-solid fa-download"></i> تصدير JSON</button>
-                <button class="btn btn-outline-secondary w-50 shadow-sm"
-                    onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-upload"></i> استيراد
-                    ذكي</button>
-                <input type="file" id="importFile" style="display:none" accept=".json"
-                    onchange="importLegacyData(event)">
+                <button class="btn btn-secondary w-50 shadow-sm" onclick="exportData()"><i class="fa-solid fa-download"></i> تصدير JSON</button>
+                <button class="btn btn-outline-secondary w-50 shadow-sm" onclick="document.getElementById('importFile').click()"><i class="fa-solid fa-upload"></i> استيراد ذكي</button>
+                <input type="file" id="importFile" style="display:none" accept=".json" onchange="importLegacyData(event)">
             </div>
         </section>
 
         <section id="view-accounting" class="app-view">
-            <h5 class="text-success border-bottom pb-2 mb-3">الحسابات والفواتير</h5>
-
+            <h5 class="text-success border-bottom pb-2 mb-3">المالية والفواتير</h5>
+            
             <div class="card shadow-sm bg-success text-white mb-3 cursor-pointer" onclick="openModal('capitalModal')">
                 <div class="card-body d-flex justify-content-between align-items-center">
-                    <div>
-                        <h6 class="mb-1 text-white-50">رأس المال المستثمر (+ زيادة)</h6>
-                        <h3 class="mb-0" id="acc-capital">0 ج.م</h3>
-                    </div>
+                    <div><h6 class="mb-1 text-white-50">رأس المال المستثمر (+ زيادة)</h6><h3 class="mb-0" id="acc-capital">0 ج.م</h3></div>
                     <i class="fa-solid fa-vault fa-2x opacity-50"></i>
                 </div>
             </div>
 
-            <button class="btn btn-danger w-100 py-2 shadow-sm mb-3" onclick="openModal('expenseModal')"><i
-                    class="fa-solid fa-receipt"></i> تسجيل مصروف + صورة الفاتورة</button>
+            <button class="btn btn-danger w-100 py-2 shadow-sm mb-3" onclick="openModal('expenseModal')"><i class="fa-solid fa-receipt"></i> تسجيل مصروف + صورة فاتورة</button>
 
-            <div class="card shadow-sm mb-3">
+            <div class="card shadow-sm mb-3 border-0 bg-white">
                 <div class="card-body p-2">
-                    <h6 class="text-muted small"><i class="fa-solid fa-filter"></i> فلترة المصروفات</h6>
+                    <h6 class="text-muted small mb-2"><i class="fa-solid fa-filter"></i> فلترة المصروفات بالوقت</h6>
                     <div class="d-flex gap-2">
-                        <input type="text" id="filter-start" class="form-control form-control-sm"
-                            placeholder="من تاريخ">
+                        <input type="text" id="filter-start" class="form-control form-control-sm" placeholder="من تاريخ">
                         <input type="text" id="filter-end" class="form-control form-control-sm" placeholder="إلى تاريخ">
-                        <button class="btn btn-primary btn-sm" onclick="applyExpenseFilter()">فلترة</button>
+                        <button class="btn btn-primary btn-sm px-3" onclick="applyExpenseFilter()">تطبيق</button>
+                        <button class="btn btn-outline-secondary btn-sm" onclick="clearExpenseFilter()"><i class="fa-solid fa-rotate-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -107,52 +76,56 @@
         </section>
 
         <section id="view-cycles" class="app-view">
-            <h5 class="text-success border-bottom pb-2 mb-3">الإنتاج وتقارير الأرباح والخسائر</h5>
+            <h5 class="text-success border-bottom pb-2 mb-3">إدارة الإنتاج</h5>
             <div id="active-cycle-container" class="mb-3"></div>
 
             <div class="card shadow-sm mb-3">
-                <div class="card-header bg-white"><i class="fa-solid fa-chart-line text-primary"></i> مقارنة الدورات
-                    التاريخية (أرباح)</div>
-                <div class="card-body"><canvas id="historyBarChart" height="200"></canvas></div>
+                <div class="card-header bg-white text-primary fw-bold"><i class="fa-solid fa-syringe"></i> جدول التحصينات</div>
+                <div class="card-body p-2"><div id="vaccine-schedule" class="timeline"></div></div>
             </div>
 
-            <button class="btn btn-warning w-100 shadow-sm py-2" onclick="openModal('sellModal')"><i
-                    class="fa-solid fa-scale-balanced"></i> تسجيل مبيعات</button>
+            <button class="btn btn-warning w-100 shadow-sm py-2 mb-3" onclick="openModal('sellModal')"><i class="fa-solid fa-scale-balanced"></i> تسجيل مبيعات للدورة</button>
+
+            <div class="card shadow-sm mb-3">
+                <div class="card-header bg-white fw-bold"><i class="fa-solid fa-chart-line text-primary"></i> أرباح الدورات التاريخية (P&L)</div>
+                <div class="card-body"><canvas id="historyBarChart" height="200"></canvas></div>
+            </div>
         </section>
 
         <section id="view-management" class="app-view">
-            <h5 class="text-success border-bottom pb-2 mb-3">الإدارة (أدوية، باركود، عمال)</h5>
-
-            <div id="qr-reader" class="mb-3 rounded" style="display: none;"></div>
+            <h5 class="text-success border-bottom pb-2 mb-3">الإدارة الشاملة والمخازن</h5>
+            
+            <div id="qr-reader" class="mb-3 rounded shadow-sm" style="display: none;"></div>
 
             <div class="card shadow-sm mb-3 border-info">
-                <div class="card-header bg-info text-white d-flex justify-content-between">
+                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
                     <span><i class="fa-solid fa-pills"></i> الصيدلية</span>
                     <div>
-                        <button class="btn btn-sm btn-light text-info" onclick="startBarcodeScan()"><i
-                                class="fa-solid fa-barcode"></i> مسح</button>
-                        <button class="btn btn-sm btn-light text-info"
-                            onclick="openModal('medicineModal')">شراء</button>
+                        <button class="btn btn-sm btn-light text-info me-1" onclick="startBarcodeScan()"><i class="fa-solid fa-barcode"></i> مسح</button>
+                        <button class="btn btn-sm btn-light text-info" onclick="openModal('medicineModal')">شراء</button>
                     </div>
                 </div>
-                <div class="card-body p-2">
-                    <div id="medicine-list" class="row g-2"></div>
-                </div>
+                <div class="card-body p-2"><div id="medicine-list" class="row g-2"></div></div>
             </div>
 
             <div class="card shadow-sm mb-3 border-danger">
-                <div class="card-header bg-danger text-white d-flex justify-content-between"><span><i
-                            class="fa-solid fa-users"></i> العمال</span><button class="btn btn-sm btn-light text-danger"
-                        onclick="openModal('workerModal')">إضافة</button></div>
-                <div class="card-body p-0">
-                    <div id="workers-list" class="list-group list-group-flush"></div>
-                </div>
+                <div class="card-header bg-danger text-white d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-users"></i> العمال والرواتب</span><button class="btn btn-sm btn-light text-danger" onclick="openModal('workerModal')">إضافة</button></div>
+                <div class="card-body p-0"><div id="workers-list" class="list-group list-group-flush"></div></div>
+            </div>
+
+            <div class="card shadow-sm mb-3 border-secondary">
+                <div class="card-header bg-secondary text-white d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-calendar-days"></i> مصاريف دورية (إيجار)</span><button class="btn btn-sm btn-light text-secondary" onclick="openModal('recurringModal')">إضافة</button></div>
+                <div class="card-body p-0"><div id="recurring-list" class="list-group list-group-flush small"></div></div>
+            </div>
+
+            <div class="card shadow-sm border-primary">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center"><span><i class="fa-solid fa-address-book"></i> الموردين والعملاء</span><button class="btn btn-sm btn-light text-primary" onclick="openModal('contactModal')">إضافة</button></div>
+                <div class="card-body p-2"><div id="contacts-list" class="row g-2"></div></div>
             </div>
         </section>
     </main>
 
-    <div id="pdf-template-container"
-        style="position: absolute; left: -9999px; top: 0; background: white; padding: 30px; width: 800px; direction: rtl; font-family: 'Segoe UI', Tahoma, sans-serif; color: black;">
+    <div id="pdf-template-container" style="position: absolute; left: -9999px; top: 0; background: white; padding: 30px; width: 800px; direction: rtl; font-family: 'Segoe UI', Tahoma, sans-serif; color: black;">
         <div style="text-align: center; border-bottom: 2px solid #198754; padding-bottom: 10px; margin-bottom: 20px;">
             <h1 style="color: #198754; margin: 0;">مزرعتي ERP</h1>
             <h3 style="margin: 5px 0;">تقرير أرباح وخسائر الدورة (P&L)</h3>
@@ -160,80 +133,38 @@
         <h4 id="pdf-cycle-name" style="color: #333;"></h4>
         <p id="pdf-cycle-dates"></p>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;" border="1">
-            <tr style="background: #f8f9fa;">
-                <th style="padding: 10px;">إجمالي التكاليف</th>
-                <th style="padding: 10px;">إجمالي المبيعات</th>
-                <th style="padding: 10px;">صافي الربح / الخسارة</th>
-            </tr>
-            <tr>
-                <td style="padding: 10px; color: red;" id="pdf-costs"></td>
-                <td style="padding: 10px; color: green;" id="pdf-sales"></td>
-                <td style="padding: 10px; font-weight: bold; font-size: 1.2rem;" id="pdf-net"></td>
-            </tr>
+            <tr style="background: #f8f9fa;"><th style="padding: 10px;">إجمالي التكاليف</th><th style="padding: 10px;">إجمالي المبيعات</th><th style="padding: 10px;">الصافي (أرباح/خسارة)</th></tr>
+            <tr><td style="padding: 10px; color: red;" id="pdf-costs"></td><td style="padding: 10px; color: green;" id="pdf-sales"></td><td style="padding: 10px; font-weight: bold; font-size: 1.2rem;" id="pdf-net"></td></tr>
         </table>
         <table style="width: 100%; border-collapse: collapse;" border="1">
-            <tr style="background: #f8f9fa;">
-                <th style="padding: 10px;">العدد المبدئي</th>
-                <th style="padding: 10px;">النافق</th>
-                <th style="padding: 10px;">العلف المستهلك</th>
-                <th style="padding: 10px;">معامل التحويل (FCR)</th>
-            </tr>
-            <tr>
-                <td style="padding: 10px;" id="pdf-birds"></td>
-                <td style="padding: 10px;" id="pdf-mortality"></td>
-                <td style="padding: 10px;" id="pdf-feed"></td>
-                <td style="padding: 10px;" id="pdf-fcr"></td>
-            </tr>
+            <tr style="background: #f8f9fa;"><th style="padding: 10px;">العدد المبدئي</th><th style="padding: 10px;">النافق</th><th style="padding: 10px;">العلف المستهلك</th><th style="padding: 10px;">معامل التحويل FCR</th></tr>
+            <tr><td style="padding: 10px;" id="pdf-birds"></td><td style="padding: 10px;" id="pdf-mortality"></td><td style="padding: 10px;" id="pdf-feed"></td><td style="padding: 10px;" id="pdf-fcr"></td></tr>
         </table>
     </div>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active" onclick="navigate('view-dashboard', this)"><i
-                class="fa-solid fa-chart-pie"></i><span>الرئيسية</span></a>
-        <a href="#" class="nav-item" onclick="navigate('view-accounting', this)"><i
-                class="fa-solid fa-calculator"></i><span>الحسابات</span></a>
-        <div class="fab-wrapper"><button class="fab-btn shadow" onclick="openModal('quickActionModal')"><i
-                    class="fa-solid fa-bolt"></i></button></div>
-        <a href="#" class="nav-item" onclick="navigate('view-cycles', this)"><i
-                class="fa-solid fa-arrows-spin"></i><span>الإنتاج</span></a>
-        <a href="#" class="nav-item" onclick="navigate('view-management', this)"><i
-                class="fa-solid fa-briefcase"></i><span>الإدارة</span></a>
+        <a href="#" class="nav-item active" onclick="navigate('view-dashboard', this)"><i class="fa-solid fa-chart-pie"></i><span>الرئيسية</span></a>
+        <a href="#" class="nav-item" onclick="navigate('view-accounting', this)"><i class="fa-solid fa-calculator"></i><span>الحسابات</span></a>
+        <div class="fab-wrapper"><button class="fab-btn shadow" onclick="openModal('quickActionModal')"><i class="fa-solid fa-bolt"></i></button></div>
+        <a href="#" class="nav-item" onclick="navigate('view-cycles', this)"><i class="fa-solid fa-arrows-spin"></i><span>الإنتاج</span></a>
+        <a href="#" class="nav-item" onclick="navigate('view-management', this)"><i class="fa-solid fa-briefcase"></i><span>الإدارة</span></a>
     </nav>
 
     <div id="modals-area">
-        <div class="modal fade" id="genericInputModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 shadow">
-                    <div class="modal-header bg-light">
-                        <h5 class="modal-title" id="gModalTitle"></h5><button type="button" class="btn-close m-0"
-                            data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body" id="gModalBody"></div>
-                    <div class="modal-footer"><button type="button" class="btn btn-secondary"
-                            data-bs-dismiss="modal">إلغاء</button><button type="button" class="btn btn-success"
-                            id="gModalSave">حفظ</button></div>
-                </div>
-            </div>
-        </div>
+        <div class="modal fade" id="genericInputModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light"><h5 class="modal-title" id="gModalTitle"></h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body" id="gModalBody"></div>
+            <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button><button type="button" class="btn btn-success" id="gModalSave">حفظ</button></div>
+        </div></div></div>
 
-        <div class="modal fade" id="quickActionModal" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 shadow-lg">
-                    <div class="modal-header bg-light">
-                        <h5 class="modal-title"><i class="fa-solid fa-bolt text-warning"></i> إدخال سريع للدورة</h5>
-                        <button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body p-3">
-                        <button class="btn btn-danger w-100 mb-3 py-3" onclick="doQuickAction('mortality')"><i
-                                class="fa-solid fa-skull"></i> تسجيل نافق (يومي)</button>
-                        <button class="btn btn-warning w-100 mb-3 py-3 text-dark" onclick="doQuickAction('feed')"><i
-                                class="fa-solid fa-bowl-food"></i> سحب علف للمزرعة</button>
-                        <button class="btn btn-info w-100 py-3 text-white" onclick="doQuickAction('weight')"><i
-                                class="fa-solid fa-weight-scale"></i> تسجيل متوسط وزن</button>
-                    </div>
-                </div>
+        <div class="modal fade" id="quickActionModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-light"><h5 class="modal-title"><i class="fa-solid fa-bolt text-warning"></i> إدخال سريع للدورة</h5><button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-3">
+                <button class="btn btn-danger w-100 mb-3 py-3" onclick="doQuickAction('mortality')"><i class="fa-solid fa-skull"></i> تسجيل نافق</button>
+                <button class="btn btn-warning w-100 mb-3 py-3 text-dark" onclick="doQuickAction('feed')"><i class="fa-solid fa-bowl-food"></i> سحب علف للدورة</button>
+                <button class="btn btn-info w-100 py-3 text-white" onclick="doQuickAction('weight')"><i class="fa-solid fa-weight-scale"></i> تسجيل متوسط وزن</button>
             </div>
-        </div>
+        </div></div></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -244,13 +175,11 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://npmcdn.com/flatpickr/dist/l10n/ar.js"></script>
     <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
+    
     <script src="db.js"></script>
     <script src="app.js"></script>
 </body>
-
 </html>
