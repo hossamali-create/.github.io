@@ -1,16 +1,18 @@
 {
-  "name": "مزرعتي ERP",
-  "short_name": "مزرعتي",
+  "name": "مزرعة نوح - Noah Farm",
+  "short_name": "Noah Farm",
+  "description": "نظام ERP متكامل لإدارة المزارع والقطعان",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f8f9fa",
-  "theme_color": "#198754",
+  "background_color": "#f5f7fa",
+  "theme_color": "#2e7d32",
   "orientation": "portrait",
-  "icons": [
+  "icons":[
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3050/3050267.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/2821/2821814.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
