@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مزرعة نوح | Noah Farm ERP</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2e7d32">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS Libraries -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loader" class="loader-overlay d-none">
+        <div class="spinner-border text-light" style="width: 3rem; height: 3rem;"></div>
+    </div>
+
+    <!-- Quick Actions (FAB) -->
+    <div class="fab-container">
+        <button class="btn btn-success fab-main shadow-lg" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fa-solid fa-bolt"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mb-2">
+            <li><a class="dropdown-item fw-bold text-danger" href="#" onclick="openExpenseModal()"><i
+                        class="fa-solid fa-minus me-2"></i> صرف نقدية</a></li>
+            <li><a class="dropdown-item fw-bold text-success" href="#" onclick="openIncomeModal()"><i
+                        class="fa-solid fa-plus me-2"></i> قبض نقدية</a></li>
+            <li>
+                <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item fw-bold text-warning" href="#" data-bs-toggle="modal"
+                    data-bs-target="#feedModal"><i class="fa-solid fa-wheat-awn me-2"></i> إدارة مخزن العلف</a></li>
+            <li><a class="dropdown-item fw-bold text-primary" href="#" onclick="openWorkerModal()"><i
+                        class="fa-solid fa-user-plus me-2"></i> تعيين عامل</a></li>
+        </ul>
+    </div>
+
+    <div class="d-flex" id="wrapper">
+        <!-- Sidebar -->
+        <div class="sidebar-wrapper bg-dark-green text-white" id="sidebar">
+            <div class="sidebar-brand text-center py-4 fs-4 fw-bold border-bottom border-success border-opacity-25">
+                <i class="fa-solid fa-leaf text-warning me-2"></i> مزرعة نوح
+            </div>
+            <div class="list-group list-group-flush mt-3 px-2">
+                <a href="#dashboard" class="nav-link-custom active"><i class="fa-solid fa-chart-pie"></i> لوحة
+                    القيادة</a>
+                <a href="#cycles" class="nav-link-custom"><i class="fa-solid fa-rotate"></i> إدارة الدورات</a>
+                <a href="#accounting" class="nav-link-custom"><i class="fa-solid fa-scale-balanced"></i> الحسابات
+                    والأرباح</a>
+                <a href="#incomes" class="nav-link-custom"><i class="fa-solid fa-hand-holding-dollar"></i> الإيرادات
+                    والمبيعات</a>
+                <a href="#expenses" class="nav-link-custom"><i class="fa-solid fa-money-bill-transfer"></i> المصروفات
+                    والتكاليف</a>
+                <a href="#workers" class="nav-link-custom"><i class="fa-solid fa-users-gear"></i> العمال والرواتب</a>
+                <a href="#settings" class="nav-link-custom"><i class="fa-solid fa-database"></i> النظام والنسخ</a>
+            </div>
+        </div>
+
+        <!-- Page Content -->
+        <div id="page-content" class="bg-body-tertiary w-100">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg bg-white py-3 px-4 shadow-sm mb-4 border-bottom">
+                <div class="d-flex align-items-center w-100">
+                    <button class="btn btn-light rounded-circle me-3 d-lg-none" id="menu-toggle"><i
+                            class="fas fa-bars"></i></button>
+                    <h4 class="m-0 fw-bold text-dark" id="page-title">لوحة القيادة</h4>
+                    <div class="ms-auto d-flex align-items-center gap-3">
+                        <div class="safe-badge shadow-sm cursor-pointer" data-bs-toggle="modal"
+                            data-bs-target="#capitalModal" title="إدارة رأس المال">
+                            <i class="fa-solid fa-vault me-2 text-success"></i>
+                            الخزنة: <span id="nav-safe-balance" class="fw-bold">0</span> ج.م
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="container-fluid px-4 pb-5">
+
+                <!-- 1. Dashboard -->
+                <section id="dashboard" class="spa-section active fade-in">
+                    <div class="row g-4 mb-4">
+                        <div class="col-xl-3 col-md-6">
+                            <div class="kpi-card bg-white border-start border-4 border-primary cursor-pointer"
+                                data-bs-toggle="modal" data-bs-target="#capitalModal">
+                                <div class="text-muted small fw-bold mb-1">رأس المال</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="mb-0 text-dark fw-bold" id="dash-capital">0</h3>
+                                    <div class="icon-box bg-primary bg-opacity-10 text-primary"><i
+                                            class="fa-solid fa-sack-dollar"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="kpi-card bg-white border-start border-4 border-success cursor-pointer"
+                                onclick="openIncomeModal()">
+                                <div class="text-muted small fw-bold mb-1">الخزنة المتاحة</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="mb-0 text-dark fw-bold" id="dash-safe">0</h3>
+                                    <div class="icon-box bg-success bg-opacity-10 text-success"><i
+                                            class="fa-solid fa-wallet"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="kpi-card bg-white border-start border-4 border-danger cursor-pointer"
+                                onclick="openExpenseModal()">
+                                <div class="text-muted small fw-bold mb-1">المصروفات</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="mb-0 text-dark fw-bold" id="dash-total-exp">0</h3>
+                                    <div class="icon-box bg-danger bg-opacity-10 text-danger"><i
+                                            class="fa-solid fa-arrow-trend-down"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6">
+                            <div class="kpi-card bg-white border-start border-4 border-warning cursor-pointer"
+                                data-bs-toggle="modal" data-bs-target="#feedModal">
+                                <div class="text-muted small fw-bold mb-1">المخزن العام (علف)</div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h3 class="mb-0 text-dark fw-bold" id="dash-feed">0</h3>
+                                    <div class="icon-box bg-warning bg-opacity-10 text-warning"><i
+                                            class="fa-solid fa-wheat-awn"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4">
+                        <div class="col-lg-8">
+                            <div class="card border-0 shadow-sm p-3 h-100"><canvas id="cashflowChart"
+                                    style="max-height: 300px;"></canvas></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card border-0 shadow-sm p-3 h-100"><canvas id="expensesChart"
+                                    style="max-height: 250px;"></canvas></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Cycles List -->
+                <section id="cycles" class="spa-section d-none fade-in">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="fw-bold m-0">الدورات والقطعان</h5>
+                        <button class="btn btn-primary" onclick="openCycleModal()"><i class="fa-solid fa-plus me-2"></i>
+                            إضافة دورة جديدة</button>
+                    </div>
+                    <div class="card border-0 shadow-sm p-3">
+                        <div id="cycles-grid"></div>
+                    </div>
+                </section>
+
+                <!-- 3. Cycle Profile (Operations Center) -->
+                <section id="cycle-profile" class="spa-section d-none fade-in">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                        <div>
+                            <button class="btn btn-outline-secondary btn-sm mb-2" onclick="goBackToCycles()"><i
+                                    class="fa-solid fa-arrow-right me-1"></i> عودة للدورات</button>
+                            <h4 class="fw-bold m-0 text-primary" id="cp-name">اسم الدورة</h4>
+                        </div>
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-warning shadow-sm fw-bold" onclick="openDailyLogModal()"><i
+                                    class="fa-solid fa-clipboard-list me-1"></i> متابعة اليوم</button>
+                            <button class="btn btn-info text-white shadow-sm fw-bold" onclick="openVaccineModal()"><i
+                                    class="fa-solid fa-syringe me-1"></i> تحصين</button>
+                            <button class="btn btn-danger shadow-sm fw-bold" onclick="openCycleExpenseModal()"><i
+                                    class="fa-solid fa-minus me-1"></i> مصروف للدورة</button>
+                            <button class="btn btn-success shadow-sm fw-bold" onclick="openCycleIncomeModal()"><i
+                                    class="fa-solid fa-plus me-1"></i> مبيعات الدورة</button>
+                        </div>
+                    </div>
+
+                    <!-- Cycle KPIs -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-2 col-6">
+                            <div class="card bg-dark text-white border-0 text-center p-3 h-100">
+                                <div class="small text-white-50">العمر</div>
+                                <h3 class="m-0" id="cp-age">0</h3>
+                                <div class="small">يوم</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="card bg-info text-white border-0 text-center p-3 h-100">
+                                <div class="small text-white-50">الطيور المتبقية</div>
+                                <h3 class="m-0" id="cp-birds">0</h3>
+                                <div class="small">طائر</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="card bg-danger text-white border-0 text-center p-3 h-100">
+                                <div class="small text-white-50">نسبة النافق</div>
+                                <h3 class="m-0" id="cp-mortality">0%</h3>
+                                <div class="small">معدل البقاء</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="card bg-warning text-dark border-0 text-center p-3 h-100">
+                                <div class="small text-black-50">FCR (التحويل)</div>
+                                <h3 class="m-0 fw-bold" id="cp-fcr">0.00</h3>
+                                <div class="small">كجم علف/لحم</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="card bg-secondary text-white border-0 text-center p-3 h-100">
+                                <div class="small text-white-50">متوسط الوزن</div>
+                                <h3 class="m-0" id="cp-weight">0</h3>
+                                <div class="small">جرام</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-6">
+                            <div class="card bg-success text-white border-0 text-center p-3 h-100">
+                                <div class="small text-white-50">صافي ربح الدورة</div>
+                                <h3 class="m-0" id="cp-profit">0</h3>
+                                <div class="small">ج.م</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cycle Charts -->
+                    <div class="row g-4 mb-4">
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm p-3 h-100">
+                                <h6 class="fw-bold">منحنى الوزن (الفعلي)</h6><canvas id="cycleWeightChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="card border-0 shadow-sm p-3 h-100">
+                                <h6 class="fw-bold">استهلاك العلف اليومي</h6><canvas id="cycleFeedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cycle Tabs -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-white border-bottom-0 pt-3">
+                            <ul class="nav nav-tabs card-header-tabs" id="cycleTabs">
+                                <li class="nav-item"><a class="nav-link active fw-bold cursor-pointer"
+                                        data-target="clogs">المتابعة اليومية</a></li>
+                                <li class="nav-item"><a class="nav-link fw-bold cursor-pointer"
+                                        data-target="cvacc">التحصينات</a></li>
+                                <li class="nav-item"><a class="nav-link fw-bold cursor-pointer text-danger"
+                                        data-target="cexp">المصروفات</a></li>
+                                <li class="nav-item"><a class="nav-link fw-bold cursor-pointer text-success"
+                                        data-target="cinc">المبيعات</a></li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div id="clogs-sec">
+                                <div id="cycle-logs-grid"></div>
+                            </div>
+                            <div id="cvacc-sec" class="d-none">
+                                <div id="cycle-vacc-grid"></div>
+                            </div>
+                            <div id="cexp-sec" class="d-none">
+                                <div id="cycle-exp-grid"></div>
+                            </div>
+                            <div id="cinc-sec" class="d-none">
+                                <div id="cycle-inc-grid"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. General Accounting -->
+                <section id="accounting" class="spa-section d-none fade-in">
+                    <div class="card border-0 shadow-sm bg-gradient-farm text-white text-center p-5 rounded-4 mb-4">
+                        <h5>صافي أرباح المزرعة العام (التراكمي)</h5>
+                        <h1 class="display-4 fw-bold mt-3" id="net-profit" dir="ltr">0 EGP</h1>
+                    </div>
+                </section>
+
+                <!-- 5. Incomes -->
+                <section id="incomes" class="spa-section d-none fade-in">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="fw-bold m-0">الإيرادات</h5><button class="btn btn-success"
+                            onclick="openIncomeModal()"><i class="fa-solid fa-plus me-2"></i>إضافة إيراد</button>
+                    </div>
+                    <div class="card border-0 shadow-sm p-3">
+                        <div id="incomes-grid"></div>
+                    </div>
+                </section>
+
+                <!-- 6. Expenses -->
+                <section id="expenses" class="spa-section d-none fade-in">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="fw-bold m-0">المصروفات</h5><button class="btn btn-danger"
+                            onclick="openExpenseModal()"><i class="fa-solid fa-plus me-2"></i>إضافة مصروف</button>
+                    </div>
+                    <div class="card border-0 shadow-sm p-3">
+                        <div id="expenses-grid"></div>
+                    </div>
+                </section>
+
+                <!-- 7. Workers -->
+                <section id="workers" class="spa-section d-none fade-in">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="fw-bold m-0">العمال</h5><button class="btn btn-primary"
+                            onclick="openWorkerModal()"><i class="fa-solid fa-plus me-2"></i>إضافة عامل</button>
+                    </div>
+                    <div class="card border-0 shadow-sm p-3">
+                        <div id="workers-grid"></div>
+                    </div>
+                </section>
+
+                <!-- 8. Settings & Backup -->
+                <section id="settings" class="spa-section d-none fade-in">
+                    <div class="row">
+                        <div class="col-md-6 mb-3"><button class="btn btn-primary w-100 p-4 shadow-sm fw-bold"
+                                id="exportDataBtn"><i class="fa-solid fa-download fs-2 d-block mb-2"></i> تحميل النسخة
+                                الاحتياطية (Export)</button></div>
+                        <div class="col-md-6 mb-3"><button class="btn btn-success w-100 p-4 shadow-sm fw-bold"
+                                data-bs-toggle="modal" data-bs-target="#importModal"><i
+                                    class="fa-solid fa-upload fs-2 d-block mb-2"></i> استعادة البيانات (Import)</button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- Cycle Modal -->
+    <div class="modal fade" id="cycleModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="cycleForm"><input type="hidden" id="cycId">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-primary text-white border-0">
+                        <h5 class="modal-title fw-bold" id="cycleModalTitle">بيانات الدورة</h5><button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="mb-3"><label class="form-label fw-bold">اسم الدورة</label><input type="text"
+                                class="form-control" id="cycName" required></div>
+                        <div class="row g-3">
+                            <div class="col-6"><label class="form-label fw-bold">تاريخ البدء</label><input type="text"
+                                    class="form-control flatpickr-date" id="cycDate" required></div>
+                            <div class="col-6"><label class="form-label fw-bold">العدد (كتاكيت)</label><input
+                                    type="number" class="form-control" id="cycBirds" required min="1"></div>
+                            <div class="col-12"><label class="form-label fw-bold">حالة الدورة</label><select
+                                    class="form-select" id="cycStatus">
+                                    <option value="active">نشطة 🟢</option>
+                                    <option value="closed">مغلقة 🔴</option>
+                                </select></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-primary px-4 w-100">حفظ</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal -->
+    <div class="modal fade" id="expenseModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="expenseForm"><input type="hidden" id="expId">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-danger text-white border-0">
+                        <h5 class="modal-title fw-bold" id="expenseModalTitle">سند صرف</h5><button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12"><label class="form-label fw-bold">البيان</label><input type="text"
+                                    class="form-control" id="expDesc" required></div>
+                            <div class="col-6"><label class="form-label fw-bold">المبلغ (ج.م)</label><input
+                                    type="number" class="form-control" id="expAmount" required min="1"></div>
+                            <div class="col-6"><label class="form-label fw-bold">التصنيف</label><select
+                                    class="form-select" id="expType">
+                                    <option value="general">عامة</option>
+                                    <option value="feed">علف</option>
+                                    <option value="chicks">كتاكيت</option>
+                                    <option value="med">أدوية</option>
+                                </select></div>
+                            <div class="col-12"><label class="form-label fw-bold text-primary">تحميل على دورة
+                                    (اختياري)</label><select class="form-select" id="expCycleId">
+                                    <option value="">-- مصروف عام --</option>
+                                </select></div>
+                            <div class="col-12"><label class="form-label fw-bold">التاريخ</label><input type="text"
+                                    class="form-control flatpickr-date" id="expDate" required></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-danger px-4 w-100">حفظ وخصم من
+                            الخزنة</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Income Modal -->
+    <div class="modal fade" id="incomeModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="incomeForm"><input type="hidden" id="incId">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-success text-white border-0">
+                        <h5 class="modal-title fw-bold" id="incomeModalTitle">سند قبض</h5><button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-12"><label class="form-label fw-bold">البيان</label><input type="text"
+                                    class="form-control" id="incDesc" required></div>
+                            <div class="col-6"><label class="form-label fw-bold">المبلغ (ج.م)</label><input
+                                    type="number" class="form-control" id="incAmount" required min="1"></div>
+                            <div class="col-6"><label class="form-label fw-bold">المصدر</label><select
+                                    class="form-select" id="incType">
+                                    <option value="birds">مبيعات لحم</option>
+                                    <option value="manure">مبيعات سبلة</option>
+                                    <option value="other">أخرى</option>
+                                </select></div>
+                            <div class="col-12"><label class="form-label fw-bold text-primary">إيراد من دورة
+                                    (اختياري)</label><select class="form-select" id="incCycleId">
+                                    <option value="">-- إيراد عام --</option>
+                                </select></div>
+                            <div class="col-12"><label class="form-label fw-bold">التاريخ</label><input type="text"
+                                    class="form-control flatpickr-date" id="incDate" required></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-success px-4 w-100">حفظ وإضافة
+                            للخزنة</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Worker Modal -->
+    <div class="modal fade" id="workerModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="workerForm"><input type="hidden" id="workId">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-dark text-white border-0">
+                        <h5 class="modal-title fw-bold" id="workerModalTitle">بيانات العامل</h5><button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="mb-3"><label class="form-label fw-bold">الاسم</label><input type="text"
+                                class="form-control" id="workName" required></div>
+                        <div class="mb-3"><label class="form-label fw-bold">الراتب المتوقع (ج.م)</label><input
+                                type="number" class="form-control" id="workSalary" required min="0"></div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-dark w-100">حفظ</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Daily Log Modal -->
+    <div class="modal fade" id="dailyLogModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="dailyLogForm"><input type="hidden" id="logId">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-warning border-0">
+                        <h5 class="modal-title fw-bold">المتابعة اليومية</h5><button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="row g-3">
+                            <div class="col-6"><label class="form-label fw-bold">التاريخ</label><input type="text"
+                                    class="form-control flatpickr-date" id="logDate" required></div>
+                            <div class="col-6"><label class="form-label fw-bold">النافق (طائر)</label><input
+                                    type="number" class="form-control" id="logMortality" value="0" min="0"></div>
+                            <div class="col-6"><label class="form-label fw-bold text-danger">سحب علف (كجم)</label><input
+                                    type="number" class="form-control" id="logFeed" value="0" min="0" step="0.5"></div>
+                            <div class="col-6"><label class="form-label fw-bold text-primary">متوسط الوزن
+                                    (جرام)</label><input type="number" class="form-control" id="logWeight" value="0"
+                                    min="0"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-warning w-100 fw-bold">حفظ
+                            المتابعة</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Vaccine Modal -->
+    <div class="modal fade" id="vaccineModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="vaccineForm"><input type="hidden" id="vacId">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-info text-white border-0">
+                        <h5 class="modal-title fw-bold">التحصين والأدوية</h5><button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <div class="mb-3"><label class="form-label fw-bold">اسم الدواء</label><input type="text"
+                                class="form-control" id="vacName" required></div>
+                        <div class="row g-3">
+                            <div class="col-6"><label class="form-label fw-bold">التاريخ</label><input type="text"
+                                    class="form-control flatpickr-date" id="vacDate" required></div>
+                            <div class="col-6"><label class="form-label fw-bold">الطريقة</label><input type="text"
+                                    class="form-control" id="vacMethod"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"><button type="submit"
+                            class="btn btn-info text-white w-100 fw-bold">حفظ</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Feed Physical Manual Modal -->
+    <div class="modal fade" id="feedModal" tabindex="-1">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <form id="feedForm">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-warning border-0">
+                        <h5 class="modal-title fw-bold">مخزن العلف (كجم)</h5><button type="button" class="btn-close"
+                            data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4 text-center"><select class="form-select mb-3" id="feedAction">
+                            <option value="add">إضافة رصيد (+)</option>
+                            <option value="consume">تخفيض رصيد (-)</option>
+                        </select><input type="number" class="form-control text-center fs-4" id="feedQty"
+                            placeholder="الكمية بالكيلو جرام" required min="1"></div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-warning w-100 fw-bold">تنفيذ</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Capital Modal -->
+    <div class="modal fade" id="capitalModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="capitalForm">
+                <div class="modal-content border-0 shadow">
+                    <div class="modal-header bg-primary text-white border-0">
+                        <h5 class="modal-title fw-bold">إدارة رأس المال</h5><button type="button"
+                            class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-4"><select class="form-select mb-3" id="capType">
+                            <option value="deposit">إيداع في الخزنة (+)</option>
+                            <option value="withdraw">سحب من الخزنة (-)</option>
+                        </select><input type="number" class="form-control" id="capAmount" required min="1"
+                            placeholder="المبلغ"></div>
+                    <div class="modal-footer"><button type="submit" class="btn btn-primary w-100">تنفيذ</button></div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-light border-0">
+                    <h5 class="modal-title fw-bold">استيراد نسخة احتياطية</h5><button type="button" class="btn-close"
+                        data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4"><input type="file" id="importFile" class="form-control" accept=".json">
+                    <div class="alert alert-danger mt-3 mb-0 small">تنبيه: سيتم مسح البيانات الحالية واستبدالها بالملف.
+                    </div>
+                </div>
+                <div class="modal-footer"><button type="button" class="btn btn-success px-4 w-100 fw-bold"
+                        id="confirmImportBtn">بدء الاستيراد</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dexie@3.2.4/dist/dexie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gridjs/dist/gridjs.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+
+    <!-- Application Logic -->
+    <script src="app.js"></script>
+</body>
+
+</html>
